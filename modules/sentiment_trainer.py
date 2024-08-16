@@ -1,5 +1,6 @@
 import tensorflow as tf
 import tensorflow_transform as tft
+from keras.utils.vis_utils import plot_model
 from tensorflow.keras import layers
 import os
 import tensorflow_hub as hub
@@ -106,8 +107,8 @@ def run_fn(fn_args: FnArgs) -> None:
         log_dir = log_dir, update_freq='batch'
     )
 
-    es = tf.keras.callbacks.EarlyStopping(monitor='val_binary_accuracy', mode='max', verbose=1, patience=10)
-    mc = tf.keras.callbacks.ModelCheckpoint(fn_args.serving_model_dir, monitor='val_binary_accuracy', mode='max', verbose=1, save_best_only=True)
+    es = tf.keras.callbacks.EarlyStopping(monitor='binary_accuracy', mode='max', verbose=1, patience=10)
+    mc = tf.keras.callbacks.ModelCheckpoint(fn_args.serving_model_dir, monitor='binary_accuracy', mode='max', verbose=1, save_best_only=True)
 
 
     # Load the transform output
@@ -141,3 +142,10 @@ def run_fn(fn_args: FnArgs) -> None:
                                     name='examples'))
     }
     model.save(fn_args.serving_model_dir, save_format='tf', signatures=signatures)
+
+    plot_model(
+        model, 
+        to_file='images/model_plot.png', 
+        show_shapes=True, 
+        show_layer_names=True
+    )
