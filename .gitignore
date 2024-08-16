@@ -1,6 +1,5 @@
 serving_model_dir
 *-pipeline
 env
-output
 
 .DS_Store
